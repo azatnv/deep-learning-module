@@ -4,3 +4,4 @@ torchvision==0.13.1+cu116
 torchaudio==0.12.1+cu116
 opencv-python==4.5.5.64
 easyocr
+-r https://raw.githubusercontent.com/ultralytics/yolov5/master/requirements.txt

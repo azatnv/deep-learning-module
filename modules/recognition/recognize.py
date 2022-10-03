@@ -1,9 +1,10 @@
 from easyocr import Reader
 import numpy as np
 
-from main import RECOGNITION_THRESHOLD
-
 reader = Reader(["ru"])
+
+RECOGNITION_THRESHOLD = 0.7
+# REGION_THRESHOLD = 0.4
 
 
 def filter_text(recognition_list) -> str:
@@ -32,6 +33,8 @@ def filter_text(recognition_list) -> str:
 
 def recognize_text_with_easyocr(image: np.ndarray) -> str:
     results = reader.readtext(image)
+
+    # print(f"{results}\n")
 
     if len(results) == 0:
         return ""

@@ -1,7 +1,7 @@
 import os
 import sys
 import argparse
-from datetime import datetime, date
+from datetime import datetime
 from pathlib import Path
 
 import torch
@@ -19,50 +19,19 @@ if str(ROOT) not in sys.path:
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))
 
 ######################################
-#      Create "logs" folders to save images and csv
-######################################
-LOGS_FOLDER = "./logs/"
-Path(LOGS_FOLDER).mkdir(exist_ok=True)
-
-
-def get_today_paths():
-    today = date.today().strftime("%Y-%m-%d")
-
-    folder = Path(f"{LOGS_FOLDER}/{today}/")
-    folder.mkdir(exist_ok=True)
-
-    image_folder_path = folder / f"licenses {today}"
-    image_folder_path.mkdir(exist_ok=True)
-
-    csv_filename = folder / f"{today}.csv"
-
-    return csv_filename, image_folder_path
-
-
-CSV_PATH, IMAGE_FOLDER_PATH = get_today_paths()
-
-######################################
-#            CONSTANTS
+#      main()
 ######################################
 
 VID_FORMATS = "mp4", "mkv", "mpg", "mpeg", "gif"
 
-DETECTION_THRESHOLD = 0.5
-RECOGNITION_THRESHOLD = 0.5
-# REGION_THRESHOLD = 0.4
 
-######################################
-#      main()
-######################################
-
-
-def main(weights=f"{ROOT}/models/yolov5x.pt", source=f"{ROOT}/data/sample.mp4"):
+def main(source=f"{ROOT}/data/sample.mp4", weights=f"{ROOT}/models/y5m_baseline.pt"):
 
     is_file = Path(source).suffix[1:] in VID_FORMATS
 
     if is_file and Path(source).is_file():
         time = datetime.now()
-        detect_plates(source)
+        detect_plates(source, weights)
         print(
             f"Elapsed {datetime.now() - time} for car plate detection, recognition and saving"
         )
@@ -89,13 +58,13 @@ def parse_opt():
     parser.add_argument(
         "--weights",
         type=str,
-        default=f"{ROOT}/models/yolov5x.pt",
+        default=f"{ROOT}/models/y5m_baseline.pt",
         help="Trained model *.pt",
     )
     parser.add_argument(
         "--source",
         type=str,
-        default=f"{ROOT}/data/sample.jpg",
+        default=f"{ROOT}/data/sample.mp4",
         help="Source file (video) or link (stream)",
     )
     opt = parser.parse_args()

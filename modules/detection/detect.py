@@ -1,15 +1,42 @@
 from cv2 import VideoCapture, imwrite
 import os
 import csv
+from pathlib import Path
+from datetime import date
 from uuid import uuid1
 import torch
 
 from modules.recognition.recognize import recognize_text_with_easyocr
 
-from main import CSV_PATH, IMAGE_FOLDER_PATH, DETECTION_THRESHOLD
+######################################
+#      Create "logs" folders to save images and csv
+######################################
+
+LOGS_FOLDER = "./logs/"
+Path(LOGS_FOLDER).mkdir(exist_ok=True)
 
 
-model = torch.hub.load("ultralytics/yolov5", "custom", path="./models/yolov5x.pt")
+def get_today_paths():
+    today = date.today().strftime("%Y-%m-%d")
+
+    folder = Path(f"{LOGS_FOLDER}/{today}/")
+    folder.mkdir(exist_ok=True)
+
+    image_folder_path = folder / f"licenses {today}"
+    image_folder_path.mkdir(exist_ok=True)
+
+    csv_filename = folder / f"{today}.csv"
+
+    return csv_filename, image_folder_path
+
+
+CSV_PATH, IMAGE_FOLDER_PATH = get_today_paths()
+
+######################################
+#           Detection
+######################################
+
+DETECTION_THRESHOLD = 0.5
 
 
 def save_license_car_plate(plate_crop, plate_text):
@@ -19,15 +46,19 @@ def save_license_car_plate(plate_crop, plate_text):
 
     with open(CSV_PATH, mode="a", newline="", encoding="utf-8") as csv_file:
         csv_writer = csv.writer(
-            csv_file, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL
+            csv_file, delimiter=" ", quotechar="|", quoting=csv.QUOTE_MINIMAL
         )
         csv_writer.writerow([unique_image_name, plate_text])
 
     return True
 
 
-def detect_plates(video_path: str):
+def detect_plates(video_path: str, weights: str):
     capture = VideoCapture(video_path)
+
+    model = torch.hub.load(
+        "ultralytics/yolov5", "custom", path=weights, trust_repo=True
+    )
 
     while capture.isOpened():
         ok, frame = capture.read()
