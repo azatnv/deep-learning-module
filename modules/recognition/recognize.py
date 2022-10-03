@@ -3,8 +3,7 @@ import numpy as np
 
 reader = Reader(["ru"])
 
-RECOGNITION_THRESHOLD = 0.7
-# REGION_THRESHOLD = 0.4
+RECOGNITION_THRESHOLD = 0.5
 
 
 def filter_text(recognition_list) -> str:

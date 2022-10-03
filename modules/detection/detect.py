@@ -36,7 +36,7 @@ CSV_PATH, IMAGE_FOLDER_PATH = get_today_paths()
 #           Detection
 ######################################
 
-DETECTION_THRESHOLD = 0.5
+DETECTION_THRESHOLD = 0.8
 
 
 def save_license_car_plate(plate_crop, plate_text):
@@ -46,7 +46,7 @@ def save_license_car_plate(plate_crop, plate_text):
 
     with open(CSV_PATH, mode="a", newline="", encoding="utf-8") as csv_file:
         csv_writer = csv.writer(
-            csv_file, delimiter=" ", quotechar="|", quoting=csv.QUOTE_MINIMAL
+            csv_file, delimiter=" ", quotechar='"', quoting=csv.QUOTE_MINIMAL
         )
         csv_writer.writerow([unique_image_name, plate_text])
 
@@ -82,7 +82,10 @@ def detect_plates(video_path: str, weights: str):
             xmax = int(prediction[2])
             ymax = int(prediction[3])
 
+            # 1) !!! Можно не пытаться распознать текст номера, если длина его изображения меньше 250px
             plate_crop = frame[ymin : ymax + 1, xmin : xmax + 1]
+
+            # 2) Обработка, выделение белого и черного: dialate(plate_crop), erode(plate_crop)
             plate_text = recognize_text_with_easyocr(plate_crop)
             if plate_text == "":
                 continue

@@ -39,12 +39,8 @@ def main(source=f"{ROOT}/data/sample.mp4", weights=f"{ROOT}/models/y5m_baseline.
         print(f"Expected VIDEO file, but got {source}")
         return
 
-    # print(weights, source)
-    # print(Path(weights).exists(), Path(source).exists())
-
     print(
         torch.cuda.is_available(),
-        torch.cuda.device_count(),
         torch.cuda.get_device_name(0),
     )
 
