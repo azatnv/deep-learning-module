@@ -104,7 +104,7 @@ def main(
         print(f"Expected VIDEO or IMAGE file, but got {source}")
         return
 
-    print("\t\n1. Downloading models ...\n")
+    print("\n\t1. Downloading models ...\n")
 
     model = torch.hub.load(
         "ultralytics/yolov5", "custom", path=weights, trust_repo=True
