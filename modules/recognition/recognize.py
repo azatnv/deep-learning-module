@@ -1,9 +1,15 @@
-from easyocr import Reader
 import numpy as np
 
-reader = Reader(["ru"])
+######################################
+#   Recognition of license number
+######################################
 
 RECOGNITION_THRESHOLD = 0.5
+
+MINIMUM_PIXEL_PLATE_LENGHT = 100  # px
+# Поставил маленький порог, чтобы для записей sample3-4.mp4 была хоть какая-то детекция.
+# для sample2.mp4, где Женя впритык снимает номера, можно поставить 150-250px
+# В идеале нам нужно видео в котром, будут крупные номера, как в sample2.mp4
 
 
 def filter_text(recognition_list) -> str:
@@ -30,10 +36,22 @@ def filter_text(recognition_list) -> str:
     return recognition_list[max_index][1]
 
 
-def recognize_text_with_easyocr(image: np.ndarray) -> str:
-    results = reader.readtext(image)
+def dialate(image):  # В разработке
+    return image
 
-    # print(f"{results}\n")
+
+def erode(image):  # В разработке
+    return image
+
+
+def recognize_text_with_easyocr(image: np.ndarray, reader) -> str:
+    if image.shape[1] < MINIMUM_PIXEL_PLATE_LENGHT:
+        return ""
+
+    # Обработка
+    # image = dialate(image)
+    # image = erode(image)
+    results = reader.readtext(image)
 
     if len(results) == 0:
         return ""

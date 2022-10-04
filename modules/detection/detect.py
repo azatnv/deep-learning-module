@@ -1,93 +1,27 @@
-from cv2 import VideoCapture, imwrite
-import os
-import csv
-from pathlib import Path
-from datetime import date
-from uuid import uuid1
-import torch
-
-from modules.recognition.recognize import recognize_text_with_easyocr
-
 ######################################
-#      Create "logs" folders to save images and csv
+#       Detection of car plate
 ######################################
 
-LOGS_FOLDER = "./logs/"
-Path(LOGS_FOLDER).mkdir(exist_ok=True)
+CONFIDENCE_THRESHOLD = 0.5  # default 0.25 for /yolo/detect.py (0.001 for /yolo/val.py)
+IOU_THRESHOLD = 0.45  # default 0.45 for /yolo/detect.py (0.6 for /yolo/val.py)
 
 
-def get_today_paths():
-    today = date.today().strftime("%Y-%m-%d")
+def detect_plate(img, img_size, model):
+    model.conf = CONFIDENCE_THRESHOLD  # NMS confidence threshold
+    model.iou = IOU_THRESHOLD  # NMS IoU threshold
+    model.max_det = 1  # maximum number of detections per image
 
-    folder = Path(f"{LOGS_FOLDER}/{today}/")
-    folder.mkdir(exist_ok=True)
+    detection = model(img, size=img_size)
 
-    image_folder_path = folder / f"licenses {today}"
-    image_folder_path.mkdir(exist_ok=True)
+    pred_tensor = detection.xyxy[0]
+    if pred_tensor.size(dim=0) == 0:
+        return None
 
-    csv_filename = folder / f"{today}.csv"
+    prediction = pred_tensor.tolist()[0]
 
-    return csv_filename, image_folder_path
+    xmin = int(prediction[0])
+    ymin = int(prediction[1])
+    xmax = int(prediction[2])
+    ymax = int(prediction[3])
 
-
-CSV_PATH, IMAGE_FOLDER_PATH = get_today_paths()
-
-######################################
-#           Detection
-######################################
-
-DETECTION_THRESHOLD = 0.8
-
-
-def save_license_car_plate(plate_crop, plate_text):
-    unique_image_name = f"{uuid1()}.jpg"
-
-    imwrite(os.path.join(IMAGE_FOLDER_PATH, unique_image_name), plate_crop)
-
-    with open(CSV_PATH, mode="a", newline="", encoding="utf-8") as csv_file:
-        csv_writer = csv.writer(
-            csv_file, delimiter=" ", quotechar='"', quoting=csv.QUOTE_MINIMAL
-        )
-        csv_writer.writerow([unique_image_name, plate_text])
-
-    return True
-
-
-def detect_plates(video_path: str, weights: str):
-    capture = VideoCapture(video_path)
-
-    model = torch.hub.load(
-        "ultralytics/yolov5", "custom", path=weights, trust_repo=True
-    )
-
-    while capture.isOpened():
-        ok, frame = capture.read()
-        if not ok:
-            print("Video is full processed")
-            break
-
-        detections = model(frame)
-
-        for pred_tensor in detections.xyxy:
-            if pred_tensor.size(dim=0) == 0:
-                continue
-            prediction = pred_tensor.tolist()[0]
-
-            confidencee = prediction[4]
-            if confidencee < DETECTION_THRESHOLD:
-                continue
-
-            xmin = int(prediction[0])
-            ymin = int(prediction[1])
-            xmax = int(prediction[2])
-            ymax = int(prediction[3])
-
-            # 1) !!! Можно не пытаться распознать текст номера, если длина его изображения меньше 250px
-            plate_crop = frame[ymin : ymax + 1, xmin : xmax + 1]
-
-            # 2) Обработка, выделение белого и черного: dialate(plate_crop), erode(plate_crop)
-            plate_text = recognize_text_with_easyocr(plate_crop)
-            if plate_text == "":
-                continue
-
-            save_license_car_plate(plate_crop, plate_text)
+    return img[ymin : ymax + 1, xmin : xmax + 1]
