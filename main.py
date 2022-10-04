@@ -48,29 +48,6 @@ def get_today_paths():
 
 CSV_PATH, IMAGE_FOLDER_PATH = get_today_paths()
 
-######################################
-#      Create "logs" folders to save images and csv
-######################################
-
-LOGS_FOLDER = "./logs/"
-Path(LOGS_FOLDER).mkdir(exist_ok=True)
-
-
-def get_today_paths():
-    today = date.today().strftime("%Y-%m-%d")
-
-    folder = Path(f"{LOGS_FOLDER}/{today}/")
-    folder.mkdir(exist_ok=True)
-
-    image_folder_path = folder / f"licenses {today}"
-    image_folder_path.mkdir(exist_ok=True)
-
-    csv_filename = folder / f"{today}.csv"
-
-    return csv_filename, image_folder_path
-
-
-CSV_PATH, IMAGE_FOLDER_PATH = get_today_paths()
 
 ######################################
 #      main()
