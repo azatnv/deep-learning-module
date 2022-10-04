@@ -12,3 +12,5 @@ Car plate recognition
 
 sample.mp4 - скорая
 sample2.mp4, sample3.mp4, sample4.mp4 - Москвич снимает Москву
+
+Inference: https://drive.google.com/file/d/1ZxBmfltLspRGKSkNJ7tt2epph4MpcwiM/view?usp=sharing
