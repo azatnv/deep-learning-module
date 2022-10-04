@@ -143,6 +143,9 @@ def main(
 
             plate_text = recognize_text_with_easyocr(plate_crop, reader)
             if plate_text == "" or len(plate_text) < 6:
+                print(
+                    f"Frame №{frame_count}, {datetime.now() - time_for_one_frame}   the text wasn't recognized"
+                )
                 continue
 
             save_license_car_plate(plate_crop, plate_text)
