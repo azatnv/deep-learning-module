@@ -7,7 +7,7 @@ from pathlib import Path
 import csv
 from uuid import uuid1
 
-from cv2 import VideoCapture, imwrite, CAP_PROP_FPS, CAP_PROP_FRAME_COUNT
+from cv2 import VideoCapture, imread, imwrite, CAP_PROP_FPS, CAP_PROP_FRAME_COUNT
 import torch
 from easyocr import Reader
 
@@ -69,6 +69,87 @@ def save_license_car_plate(plate_crop, plate_text):
         csv_writer.writerow([unique_image_name, plate_text])
 
 
+def video_pipeline(source, imgsz, model, reader):
+    time = datetime.now()
+    print(f"\n\t2. Detection and recognition started (image size {imgsz})\n")
+
+    capture = VideoCapture(source)
+
+    fps = capture.get(CAP_PROP_FPS)
+    frames = int(capture.get(CAP_PROP_FRAME_COUNT))
+    duration = frames / fps
+
+    frame_count = 0
+    while capture.isOpened():
+        ok, frame = capture.read()
+        if not ok:
+            print("Video is full processed")
+            break
+
+        time_for_one_frame = datetime.now()
+        frame_count += 1
+
+        plate_crop = detect_plate(frame, imgsz, model)
+        if plate_crop is None:
+            print(
+                f"Frame №{frame_count}, {datetime.now() - time_for_one_frame}   no detections"
+            )
+            continue
+
+        plate_text = recognize_text_with_easyocr(plate_crop, reader)
+        if plate_text == "" or len(plate_text) < 6:
+            print(
+                f"Frame №{frame_count}, {datetime.now() - time_for_one_frame}   the text wasn't recognized"
+            )
+            continue
+
+        save_license_car_plate(plate_crop, plate_text)
+
+        print(
+            f'Frame №{frame_count}, {datetime.now() - time_for_one_frame}   "{plate_text}" shape={plate_crop.shape[0:2]}'
+        )
+    print(
+        f"\n\tDetection and recognition finished!\n\tVideo duration: {duration} seconds\n\tElapsed {datetime.now() - time} for car plate detection, recognition and saving"
+    )
+
+
+def image_pipeline(source, imgsz, model, reader):
+    image = imread(source)
+
+    plate_crop = detect_plate(image, imgsz, model)
+    if plate_crop is None:
+        print("no detection")
+        return ""
+    else:
+        return recognize_text_with_easyocr(plate_crop, reader)
+
+
+def test_pipeline(imgsz, model, reader):
+    import json
+
+    with open(f"{ROOT}/test/dataset.json", "r", encoding="utf-8") as labels_file:
+        test_labels = json.load(labels_file)["labels"]
+
+    all_images = len(test_labels)
+
+    right_preditctions = 0
+    for label in test_labels:
+        l_text = label["nums"][0]["text"]
+        l_file = f'{ROOT}/test/images/{label["file"]}'
+
+        pred_text = image_pipeline(l_file, imgsz, model, reader)
+
+        print(f"{l_text}, {pred_text.upper()}")
+
+        if l_text == pred_text.upper():
+            right_preditctions += 1
+
+    precision = right_preditctions / all_images
+    print(f"Точность: {precision}")
+
+    return precision
+
+
 def main(
     source=f"{ROOT}/data/sample.mp4",
     weights=f"{ROOT}/models/y5m_baseline.pt",
@@ -76,9 +157,12 @@ def main(
 ):
     is_video = Path(source).suffix[1:] in VID_FORMATS
     is_image = Path(source).suffix[1:] in IMG_FORMATS
+    is_test = Path(source).exists and (source == "test")
 
-    if not is_video and not is_image:
-        print(f"Expected VIDEO or IMAGE file, but got {source}")
+    if not is_video and not is_image and not is_test:
+        print(
+            f"[--source N] Expected VIDEO, IMAGE file or 'test' ('test' folder should exist), but got {source}"
+        )
         return
 
     print("\n\t1. Downloading models ...\n")
@@ -92,53 +176,19 @@ def main(
     print("\n\tDownload - success!")
 
     if is_video and Path(source).is_file():
-        time = datetime.now()
-        print(f"\n\t2. Detection and recognition started (image size {imgsz})\n")
+        video_pipeline(source, imgsz, model, reader)
 
-        capture = VideoCapture(source)
+    if is_image and Path(source).is_file():
+        number = image_pipeline(source, imgsz, model, reader)
+        print(f'\n\t{source} -> license car number: "{number}"')
 
-        fps = capture.get(CAP_PROP_FPS)
-        frames = int(capture.get(CAP_PROP_FRAME_COUNT))
-        duration = frames / fps
-
-        frame_count = 0
-        while capture.isOpened():
-            ok, frame = capture.read()
-            if not ok:
-                print("Video is full processed")
-                break
-
-            time_for_one_frame = datetime.now()
-            frame_count += 1
-
-            plate_crop = detect_plate(frame, imgsz, model)
-            if plate_crop is None:
-                print(
-                    f"Frame №{frame_count}, {datetime.now() - time_for_one_frame}   no detections"
-                )
-                continue
-
-            plate_text = recognize_text_with_easyocr(plate_crop, reader)
-            if plate_text == "" or len(plate_text) < 6:
-                print(
-                    f"Frame №{frame_count}, {datetime.now() - time_for_one_frame}   the text wasn't recognized"
-                )
-                continue
-
-            save_license_car_plate(plate_crop, plate_text)
-
-            print(
-                f'Frame №{frame_count}, {datetime.now() - time_for_one_frame}   "{plate_text}" shape={plate_crop.shape[0:2]}'
-            )
-        print(
-            f"""\n\tDetection and recognition finished!
-        Video duration: {duration} seconds
-        Elapsed {datetime.now() - time} for car plate detection, recognition and saving
-        """
-        )
+    if is_test:
+        # python main.py --weights .\models\y5s6.pt --source test --img 1280
+        test_pipeline(imgsz, model, reader)
 
     # is_url =
     # TODO()
+    print("\n\tExit ...")
     return "zxc"
 
 

@@ -6,7 +6,7 @@ import numpy as np
 
 RECOGNITION_THRESHOLD = 0.5
 
-MINIMUM_PIXEL_PLATE_LENGHT = 100  # px
+MINIMUM_PIXEL_PLATE_LENGHT = 50  # px
 # Поставил маленький порог, чтобы для записей sample3-4.mp4 была хоть какая-то детекция.
 # для sample2.mp4, где Женя впритык снимает номера, можно поставить 150-250px
 # В идеале нам нужно видео в котром, будут крупные номера, как в sample2.mp4
