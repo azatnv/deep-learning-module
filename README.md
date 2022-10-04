@@ -1,5 +1,4 @@
-# deep-learning-module
-Car plate recognition
+# Car plate recognition
 
 1) conda create -n env_name --python=3.10
 
