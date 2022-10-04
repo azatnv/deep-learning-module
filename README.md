@@ -9,7 +9,7 @@
 4) python main.py --img 1280 --weights models/y5s6.pt --source data/sample2.mp4
 
 
-sample.mp4 - скорая
-sample2.mp4, sample3.mp4, sample4.mp4 - Москвич снимает Москву
+- sample.mp4 - скорая
+- sample2.mp4, sample3.mp4, sample4.mp4 - Москвич снимает Москву
 
 Inference: https://drive.google.com/file/d/1ZxBmfltLspRGKSkNJ7tt2epph4MpcwiM/view?usp=sharing
