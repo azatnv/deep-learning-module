@@ -53,8 +53,8 @@ CSV_PATH, IMAGE_FOLDER_PATH = get_today_paths()
 #      main()
 ######################################
 
-VID_FORMATS = "mp4", "mkv", "mpg", "mpeg", "gif"
-IMG_FORMATS = "bmp", "dng", "jpeg", "jpg", "mpo", "png", "tif", "tiff", "webp", "pfm"
+VID_FORMATS = "mp4", "mkv", "mpg", "mpeg", "mov", "gif"
+IMG_FORMATS = ("bmp", "dng", "jpeg", "jpg", "mpo", "png", "tif", "tiff", "webp", "pfm")
 
 
 def save_license_car_plate(plate_crop, plate_text):
@@ -99,14 +99,14 @@ def video_pipeline(source, imgsz, model, reader):
         plate_text = recognize_text_with_easyocr(plate_crop, reader)
         if plate_text == "" or len(plate_text) < 6:
             print(
-                f"Frame №{frame_count}, {datetime.now() - time_for_one_frame}   the text wasn't recognized"
+                f"Frame №{frame_count}, {datetime.now() - time_for_one_frame}   the number wasn't recognized, or car plate is too small"
             )
             continue
 
         save_license_car_plate(plate_crop, plate_text)
 
         print(
-            f'Frame №{frame_count}, {datetime.now() - time_for_one_frame}   "{plate_text}" shape={plate_crop.shape[0:2]}'
+            f'Frame №{frame_count}, {datetime.now() - time_for_one_frame}   "{plate_text}"'
         )
     print(
         f"\n\tDetection and recognition finished!\n\tVideo duration: {duration} seconds\n\tElapsed {datetime.now() - time} for car plate detection, recognition and saving"
@@ -118,7 +118,6 @@ def image_pipeline(source, imgsz, model, reader):
 
     plate_crop = detect_plate(image, imgsz, model)
     if plate_crop is None:
-        print("no detection")
         return ""
     else:
         return recognize_text_with_easyocr(plate_crop, reader)
@@ -134,14 +133,14 @@ def test_pipeline(imgsz, model, reader):
 
     right_preditctions = 0
     for label in test_labels:
-        l_text = label["nums"][0]["text"]
-        l_file = f'{ROOT}/test/images/{label["file"]}'
+        label_text = label["nums"][0]["text"]
+        label_file = f'{ROOT}/test/images/{label["file"]}'
 
-        pred_text = image_pipeline(l_file, imgsz, model, reader)
+        pred_text = image_pipeline(label_file, imgsz, model, reader)
 
-        print(f"{l_text}, {pred_text.upper()}")
+        print(f"{label_text}, {pred_text.upper()}")
 
-        if l_text == pred_text.upper():
+        if label_text == pred_text.upper():
             right_preditctions += 1
 
     precision = right_preditctions / all_images
