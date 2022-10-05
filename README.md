@@ -1,15 +1,35 @@
 # Car plate recognition
 
-1) conda create -n env_name --python=3.10
+Vehicle registration plates are saved in the "logs" folder
 
-2) conda activate env_name
+## Setup
+```Linux Kernel Module
+conda create -n env_name --python=3.10
 
-3) pip install -r requirements.txt
+conda activate env_name
 
-4) python main.py --img 1280 --weights models/y5s6.pt --source data/sample2.mp4
+pip install -r requirements.txt
+``` 
+## Usage
+#### Detection on:
+1. Image
+```Linux Kernel Module
+python main.py --weights models/y5m6.pt --source data/sample.jpg --img 1280
+``` 
+2. Video
+```Linux Kernel Module
+python main.py --weights models/y5s_baseline.pt --source data/sample2.mp4
+```
+3. Test dataset
+```Linux Kernel Module
+python main.py --weights models/y5m_baseline.pt --source test
+```
 
-
-- sample.mp4 - скорая
-- sample2.mp4, sample3.mp4, sample4.mp4 - Москвич снимает Москву
+#### Video samples: 
+- sample.mp4 - 2k
+- sample2.mp4, sample3.mp4, sample4.mp4 - 720 HD
+- sample6.mp4 - 4k
+#### Image samples:
+- sample.jpg
 
 Inference: https://drive.google.com/file/d/1ZxBmfltLspRGKSkNJ7tt2epph4MpcwiM/view?usp=sharing
