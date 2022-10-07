@@ -25,11 +25,4 @@ python main.py --weights models/y5s_baseline.pt --source data/sample2.mp4
 python main.py --weights models/y5m_baseline.pt --source test
 ```
 
-#### Video samples: 
-- sample.mp4 - 2k
-- sample2.mp4, sample3.mp4, sample4.mp4 - 720 HD
-- sample6.mp4 - 4k
-#### Image samples:
-- sample.jpg
-
 Inference: https://drive.google.com/file/d/1ZxBmfltLspRGKSkNJ7tt2epph4MpcwiM/view?usp=sharing
