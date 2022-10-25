@@ -1,8 +1,8 @@
 # Car plate recognition
 
-Vehicle registration plates are saved in the "logs" folder
+Автомобильные номера сохраняются в папку "logs".
 
-## Setup
+## Установка
 ```Linux Kernel Module
 conda create -n env_name --python=3.10
 
@@ -10,17 +10,17 @@ conda activate env_name
 
 pip install -r requirements.txt
 ``` 
-## Usage
+## Применение
 #### Detection on:
-1. Image
+1. Изображение
 ```Linux Kernel Module
 python main.py --weights models/y5m6.pt --source data/sample.jpg --img 1280
 ``` 
-2. Video
+2. Видео
 ```Linux Kernel Module
 python main.py --weights models/y5s_baseline.pt --source data/sample2.mp4
 ```
-3. Test dataset
+3. Тестовый датасет
 ```Linux Kernel Module
 python main.py --weights models/y5m_baseline.pt --source test
 ```
