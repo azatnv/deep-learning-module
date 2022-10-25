@@ -70,5 +70,5 @@ Inference: https://drive.google.com/file/d/1ZxBmfltLspRGKSkNJ7tt2epph4MpcwiM/vie
 ## Возможность масштабирования
 • Есть возможность масштабировать систему до двух и более камер при уменьшении количества кадров в секунду.
 
-![image_2022-10-25_20-12-07](https://user-images.githubusercontent.com/110126453/197839057-b45cf107-5cff-4456-8a4d-daee9ed348bc.png)
+![image](https://user-images.githubusercontent.com/51293938/197841343-22e9a2f2-c091-447a-8abe-6d4e80257c23.png)
 
