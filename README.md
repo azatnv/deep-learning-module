@@ -37,6 +37,7 @@ python main.py --weights models/y5m_baseline.pt --source test
 
 •	mAP (mean average precision) – представляет собой среднее значений AP. 
 AP - это среднее значение по нескольким IoU (минимальное значение IoU для рассмотрения положительного совпадения). AP@[0.5:0.95] соответствует среднему значению AP для IoU от 0,5 до 0,95 с шагом 0,05.
+![image](https://user-images.githubusercontent.com/51293938/197832715-4800a2cc-5cbb-4ad0-bcd1-f73d9ab72f8e.png)
 
 ## Тренировочные параметры
 • Batch size (размер батча, то есть количество картинок, одновременно подаваемых на вход yolo) : 16
