@@ -26,6 +26,8 @@ python main.py --weights models/y5m_baseline.pt --source test
 ```
 ## Устройство системы
 ![Untitled (2)](https://user-images.githubusercontent.com/110126453/197808757-283a6c0e-d609-41a4-8fbf-b948cb434525.jpg)
+![Untitled (3)](https://user-images.githubusercontent.com/110126453/197824975-7641c20c-a881-4254-8b30-909a5ac58639.jpg)
+
 #### *Желательный размер входного изображения: 1280x720px.
 
 ## Метрики
