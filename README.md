@@ -62,7 +62,7 @@ AP - это среднее значение по нескольким IoU (ми�
 | ------------- | ------------- | ------------- |
 | easyOCR  | 0.35  | 20ms  |
 
-• Всё решение
+• Всё решение <br/>
 Accuracy всего решения - 0.2
 
 Inference: https://drive.google.com/file/d/1ZxBmfltLspRGKSkNJ7tt2epph4MpcwiM/view?usp=sharing
