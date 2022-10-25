@@ -37,16 +37,13 @@ python main.py --weights models/y5m_baseline.pt --source test
 
 •	mAP (mean average precision) – представляет собой среднее значений AP. 
 AP - это среднее значение по нескольким IoU (минимальное значение IoU для рассмотрения положительного совпадения). AP@[0.5:0.95] соответствует среднему значению AP для IoU от 0,5 до 0,95 с шагом 0,05. <br/>
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/51293938/197833647-219bad18-dca4-4486-b711-189354bb688f.png">
-  | model  | mAP50 | speed |
-  | ------------- | ------------- | ------------- |
-  | yolov5n  | 0.86  | 10ms  |
-  | yolov5s  | 0.9  | 15ms  |
-  | yolov5s6  | 0.9  | 30ms  |
-  | yolov5m  | 0.92  | 20ms  |
-  | yolov7e6  | 0.82  | 35ms  |
-</p>
+| model  | mAP50 | speed |
+| ------------- | ------------- | ------------- |
+| yolov5n  | 0.86  | 10ms  |
+| yolov5s  | 0.9  | 15ms  |
+| yolov5s6  | 0.9  | 30ms  |
+| yolov5m  | 0.92  | 20ms  |
+| yolov7e6  | 0.82  | 35ms  |
 
 
 ## Тренировочные параметры
