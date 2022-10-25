@@ -24,10 +24,9 @@ python main.py --weights models/y5s_baseline.pt --source data/sample2.mp4
 ```Linux Kernel Module
 python main.py --weights models/y5m_baseline.pt --source test
 ```
-## Устройство системы и основные требования
-![Untitled](https://user-images.githubusercontent.com/110126453/197792574-38aadb3b-4876-4d65-a599-705f17d5c60b.jpg)
-#### Требования:
-• Камера видеонаблюдения, выдающая изображение c минимальным размером 640x640px.
+## Устройство системы
+![Untitled (1)](https://user-images.githubusercontent.com/110126453/197807730-e21e01a3-3cbd-4b57-b843-4f7218554857.jpg)
+#### *Желательный размер изображения: 1280x720px.
 
 ## Метрики
 •	Accuracy – это показатель, который описывает общую точность предсказания модели по всем классам. Рассчитывается как отношение количества правильных прогнозов к их общему количеству.
