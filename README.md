@@ -25,8 +25,8 @@ python main.py --weights models/y5s_baseline.pt --source data/sample2.mp4
 python main.py --weights models/y5m_baseline.pt --source test
 ```
 ## Устройство системы
-![Untitled (1)](https://user-images.githubusercontent.com/110126453/197807730-e21e01a3-3cbd-4b57-b843-4f7218554857.jpg)
-#### *Желательный размер изображения: 1280x720px.
+![Untitled (2)](https://user-images.githubusercontent.com/110126453/197808757-283a6c0e-d609-41a4-8fbf-b948cb434525.jpg)
+#### *Желательный размер входного изображения: 1280x720px.
 
 ## Метрики
 •	Accuracy – это показатель, который описывает общую точность предсказания модели по всем классам. Рассчитывается как отношение количества правильных прогнозов к их общему количеству.
